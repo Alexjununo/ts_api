@@ -12,9 +12,8 @@
   },
   "lint-staged": {
     "*.{js, ts, json}": [
-      "echo 'teste'",
       "eslint ./src ./test --ext .ts --fix",
-      "git add"
+      "git add ."
     ]
   },
   "scripts": {
