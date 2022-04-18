@@ -5,12 +5,13 @@
   "main": "index.js",
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged"
+      "pre-commit": "lint-staged",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
     }
   },
   "lint-staged": {
     "*.ts": [
-      "eslint --fix",
+      "eslint ./src ./test --ext .ts --fix",
       "git add"
     ]
   },
@@ -25,6 +26,8 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@commitlint/cli": "^16.2.3",
+    "@commitlint/config-conventional": "^16.2.1",
     "@types/module-alias": "^2.0.1",
     "@types/node": "^17.0.24",
     "@typescript-eslint/eslint-plugin": "^5.19.0",
@@ -36,7 +39,6 @@
     "lint-staged": "^12.3.8",
     "typescript": "^4.6.3"
   },
-  
   "dependencies": {
     "module-alias": "^2.2.2"
   }
