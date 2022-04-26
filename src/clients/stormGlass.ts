@@ -1,5 +1,5 @@
-/* eslint-disable no-empty-function */
-/* eslint-disable no-useless-constructor */
+/* eslint-disable max-classes-per-file */
+import { InternalError } from '@src/util/errors/internal-error';
 import { AxiosStatic } from 'axios';
 
 export interface StormGlassPointSource {
@@ -30,6 +30,20 @@ export interface ForecastPoint {
   swellPeriod: number,
   windDirection: number,
   windSpeed: number,
+}
+
+export class ClientRequestError extends InternalError {
+  constructor(message: string) {
+    const internalMessage = `Unexpected error when trying to communicate to StormGlass: ${message}`;
+    super(internalMessage);
+  }
+}
+
+export class StormGlassResponseError extends InternalError {
+  constructor(message: string) {
+    const internalMessage = `Unexpected error returned by the StormGlass service: ${message}`;
+    super(internalMessage);
+  }
 }
 
 export class StormGlass {
@@ -66,15 +80,22 @@ export class StormGlass {
   }
 
   public async fetchPoints(lat: number, lng: number): Promise<ForecastPoint[]> {
-    const response = await this.request.get<StormGlassForecastResponse>(
-      `https://api.stormglass.io/v2/weather/point?params=${this.stormGlassAPIParams}&source=${this.stormGlassAPISource}&end=1592113802&lat=${lat}&lng=${lng}`,
-      {
-        headers: {
-          Authorization: 'fake-token',
+    try {
+      const response = await this.request.get<StormGlassForecastResponse>(
+        `https://api.stormglass.io/v2/weather/point?params=${this.stormGlassAPIParams}&source=${this.stormGlassAPISource}&end=1592113802&lat=${lat}&lng=${lng}`,
+        {
+          headers: {
+            Authorization: 'fake-token',
+          },
         },
-      },
-    );
+      );
 
-    return this.normalizeResponse(response.data);
+      return this.normalizeResponse(response.data);
+    } catch (e: any) {
+      if (e.response && e.response.status === 429) {
+        throw new StormGlassResponseError(`Error: ${JSON.stringify(e.response.data)} Code: ${e.response.status}`);
+      }
+      throw new ClientRequestError(e.message);
+    }
   }
 }

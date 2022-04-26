@@ -23,7 +23,10 @@
         "import/extensions": "off",
         "import/no-unresolved": "off",
         "no-unused-vars": "off",
-        "vars-on-top": "off"
+        "vars-on-top": "off",
+        "no-octal":"off",
+        "no-empty-function": "off",
+        "no-useless-constructor": "off"
     }
     
 }
