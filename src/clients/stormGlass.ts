@@ -1,7 +1,7 @@
 /* eslint-disable max-classes-per-file */
 import { InternalError } from '@src/util/errors/internal-error';
-import { AxiosStatic } from 'axios';
 import config, { IConfig } from 'config';
+import * as HTTPUtil from '@src/util/request';
 
 const stormGlassResourceConfig: IConfig = config.get('App.resources.StormGlass');
 
@@ -54,7 +54,7 @@ export class StormGlass {
 
   readonly stormGlassAPISource = 'noaa';
 
-  constructor(protected request: AxiosStatic) {}
+  constructor(protected request = new HTTPUtil.Request()) {}
 
   private normalizeResponse(points: StormGlassForecastResponse): ForecastPoint[] {
     return points.hours.filter(this.isValidPoint.bind(this)).map((point) => ({
@@ -95,7 +95,7 @@ export class StormGlass {
 
       return this.normalizeResponse(response.data);
     } catch (e: any) {
-      if (e.response && e.response.status === 429) {
+      if (HTTPUtil.Request.isRequestError(e)) {
         throw new StormGlassResponseError(`Error: ${JSON.stringify(e.response.data)} Code: ${e.response.status}`);
       }
       throw new ClientRequestError(e.message);
