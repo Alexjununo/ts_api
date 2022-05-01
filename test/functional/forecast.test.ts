@@ -1,4 +1,5 @@
 describe('Beach forecast functional tests', () => {
+  // deve retornar uma previsão
   it('should return a forecast with a just a few times', async () => {
     const { body, status } = await global.testRequest.get('/forecast');
 

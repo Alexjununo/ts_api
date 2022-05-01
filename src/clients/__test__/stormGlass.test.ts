@@ -9,6 +9,7 @@ describe('StormGlass client', () => {
   const MockedRequestClass = HTTPUtil.Request as jest.Mocked<typeof HTTPUtil.Request>;
   const mockedRequest = new HTTPUtil.Request() as jest.Mocked<HTTPUtil.Request>;
 
+  // deve retornar a previsão normalizada do serviço StormGlass
   it('should return the normalized forecast from the StormGlass service', async () => {
     const lat = -29.9076386;
     const lng = -51.2108403;
@@ -21,6 +22,7 @@ describe('StormGlass client', () => {
     expect(response).toEqual(stormGlassNormalized3HoursFixture);
   });
 
+  // deve excluir pontos de dados incompletos
   it('should exclude incomplete data points', async () => {
     const lat = -29.9076386;
     const lng = -51.2108403;
@@ -43,6 +45,7 @@ describe('StormGlass client', () => {
     expect(response).toEqual([]);
   });
 
+  // deve receber um erro genérico do serviço StormGlass quando a solicitação falhar antes de chegar ao serviço
   it('should get a generic error drom StormGlass service when the request fail before reaching the service', async () => {
     const lat = -29.9076386;
     const lng = -51.2108403;
@@ -56,6 +59,7 @@ describe('StormGlass client', () => {
     );
   });
 
+  // deve receber um StormGlassResponseError quando o serviço StormGlass responder com erro
   it('should get an StormGlassResponseError when the StormGlass service responds with error', async () => {
     const lat = -29.9076386;
     const lng = -51.2108403;

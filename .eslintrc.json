@@ -27,7 +27,8 @@
         "no-octal":"off",
         "no-empty-function": "off",
         "no-useless-constructor": "off",
-        "max-len": "off"
+        "max-len": "off",
+        "no-restricted-syntax": "off"
     }
     
 }
