@@ -18,7 +18,8 @@
   "scripts": {
     "build": "tsc",
     "start": "npm run build && node dist/src/index.js",
-    "start:dev": "ts-node-dev 'src/index.ts'",
+    "start:dev": "ts-node-dev --transpile-only --respawn --project tsconfig.json src/index.ts",
+    "start:debug": "ts-node-dev --files --transpile-only --respawn --inspect=4321 --project tsconfig.json 'src/index.ts'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "test:functional": "jest --projects ./test --forceExit --runInBand",
     "test:unit": "jest",
