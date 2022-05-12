@@ -25,6 +25,25 @@ export interface TimeForecast {
 export class Forecast {
   constructor(protected stormGlass = new StormGlass()) {}
 
+  private mapForecastByTime(forecast: BeachForecast[]): TimeForecast[] {
+    const forecastByTime: TimeForecast[] = [];
+
+    for (const point of forecast) {
+      const timePoint = forecastByTime.find((f) => f.time === point.time);
+
+      if (timePoint) {
+        timePoint.forecast.push(point);
+      } else {
+        forecastByTime.push({
+          time: point.time,
+          forecast: [point],
+        });
+      }
+    }
+
+    return forecastByTime;
+  }
+
   public async processForecastForBeaches(beaches: Beach[]): Promise<TimeForecast[]> {
     const pointsWithCorrectSources: BeachForecast[] = [];
 
@@ -50,24 +69,5 @@ export class Forecast {
     } catch (e: any) {
       throw new Error(e.message);
     }
-  }
-
-  private mapForecastByTime(forecast: BeachForecast[]): TimeForecast[] {
-    const forecastByTime: TimeForecast[] = [];
-
-    for (const point of forecast) {
-      const timePoint = forecastByTime.find((f) => f.time === point.time);
-
-      if (timePoint) {
-        timePoint.forecast.push(point);
-      } else {
-        forecastByTime.push({
-          time: point.time,
-          forecast: [point],
-        });
-      }
-    }
-
-    return forecastByTime;
   }
 }
